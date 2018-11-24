@@ -30,6 +30,9 @@ return [
     'TaskService' => function () {
         return new \App\TaskService();
     },
+    'ProductService' => function () {
+        return new \App\ProductService(new \App\ProductsArrayRepository());
+    },
     'Uri' => function () {
         return new \Zend\Diactoros\Uri($_SERVER['REQUEST_URI']);
     },

@@ -17,6 +17,7 @@ $twig = $container->get('Twig');
 $request = $container->get('ServerRequest');
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/task/{action:\w+}/{id:\d+}', 'TaskService');
+    $r->addRoute('GET', '/product[/{action:\w+}[/{id:\d+}]]', 'ProductService');
     $r->addRoute('GET', '/info', 'info');
 });
 

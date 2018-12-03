@@ -17,14 +17,15 @@ $twig = $container->get('Twig');
 $request = $container->get('ServerRequest');
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/task/{action:\w+}/{id:\d+}', 'TaskService');
-    $r->addRoute('GET', '/product[/{action:\w+}[/{id:\d+}]]', 'ProductService');
+    $r->addRoute('GET', '/api[/{action:\w+}[/{id:\d+}]]', 'ApiController');
+    $r->addRoute('GET', '/product[/{action:\w+}[/{id:\d+}]]', 'ProductController');
     $r->addRoute('GET', '/info', 'info');
+    $r->addRoute('GET', '/', 'ProductController');
 });
 
 $httpMethod = $request->getMethod();
 $uri = $request->getUri();
 
-// Strip query string (?foo=bar) and decode URI
 if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
@@ -33,7 +34,7 @@ $uri = rawurldecode($uri);
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
-        // ... 404 Not Found
+        $response = new \Zend\Diactoros\Response\HtmlResponse($twig->render('404.html'), 404);
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
@@ -41,13 +42,24 @@ switch ($routeInfo[0]) {
         break;
     case FastRoute\Dispatcher::FOUND:
         if ($routeInfo[1] === 'info') {
-            $response = new \Zend\Diactoros\Response\HtmlResponse($twig->render('index.html'));
+            $response = new \Zend\Diactoros\Response\HtmlResponse($twig->render('info.html'));
         } else {
             $handler = $container->get($routeInfo[1]);
             $vars = $routeInfo[2];
             extract($vars);
-            $result = $handler->$action($id);
-            $response = new \Zend\Diactoros\Response\JsonResponse($result, 200);
+            if (isset($action) && isset($id)) {
+                $result = $handler->$action($id);
+            } elseif (isset($action)) {
+                $result = $handler->$action();
+            } else {
+                $action = 'index';
+                $result = $handler->$action();
+            }
+            if ($handler instanceof \App\ApiController) {
+                $response = new \Zend\Diactoros\Response\JsonResponse($result, 200);
+            } elseif ($handler instanceof \App\ProductController) {
+                $response = new \Zend\Diactoros\Response\HtmlResponse($result, 200);
+            }
         }
         break;
 }
@@ -57,4 +69,10 @@ if (!headers_sent()) {
         header($name . ': ' . implode(',', $value));
     }
 }
+header(sprintf(
+    'HTTP/%s %s %s',
+    $response->getProtocolVersion(),
+    $response->getStatusCode(),
+    $response->getReasonPhrase()
+), true, $response->getStatusCode());
 echo $response->getBody();

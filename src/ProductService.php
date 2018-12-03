@@ -20,17 +20,37 @@ class ProductService
         $this->repository = $repository;
     }
 
-    public function create()
+    public function create($data)
     {
-
+        $product = new Product(null, $data['title'], $data['package'], $data['bestBefore'], $data['measure'], $data['volume'], $data['cost']);
+        if ($this->repository->create($product)) {
+            $products = $this->repository->getList();
+            $result = [];
+            foreach ($products as $product) {
+                $result[] = $product->asArray();
+            }
+        } else {
+            $result = ['error' => true];
+        }
+        return $result;
     }
 
-    public function update()
+    public function update($data)
     {
-
+        $product = new Product($data['id'], $data['title'], $data['package'], $data['bestBefore'], $data['measure'], $data['volume'], $data['cost']);
+        if ($this->repository->update($product)) {
+            $products = $this->repository->getList();
+            $result = [];
+            foreach ($products as $product) {
+                $result[] = $product->asArray();
+            }
+        } else {
+            $result = ['error' => true];
+        }
+        return $result;
     }
 
-    public function view(int $id)
+    public function one(int $id)
     {
         return $this->repository->getById($id)->asArray();
     }

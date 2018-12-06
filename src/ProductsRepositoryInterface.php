@@ -18,7 +18,7 @@ interface ProductsRepositoryInterface
     public function create(Product $product);
 
     /**
-     * @return Product[]
+     * @return ProductsCollection
      */
     public function getList();
 

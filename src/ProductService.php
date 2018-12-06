@@ -24,11 +24,7 @@ class ProductService
     {
         $product = new Product(null, $data['title'], $data['package'], $data['bestBefore'], $data['measure'], $data['volume'], $data['cost']);
         if ($this->repository->create($product)) {
-            $products = $this->repository->getList();
-            $result = [];
-            foreach ($products as $product) {
-                $result[] = $product->asArray();
-            }
+            $result = $this->repository->getList()->toArray();
         } else {
             $result = ['error' => true];
         }
@@ -39,11 +35,7 @@ class ProductService
     {
         $product = new Product($data['id'], $data['title'], $data['package'], $data['bestBefore'], $data['measure'], $data['volume'], $data['cost']);
         if ($this->repository->update($product)) {
-            $products = $this->repository->getList();
-            $result = [];
-            foreach ($products as $product) {
-                $result[] = $product->asArray();
-            }
+            $result = $this->repository->getList()->toArray();
         } else {
             $result = ['error' => true];
         }
@@ -57,12 +49,7 @@ class ProductService
 
     public function list()
     {
-        $products = $this->repository->getList();
-        $result = [];
-        foreach ($products as $product) {
-            $result[] = $product->asArray();
-        }
-        return $result;
+        return $this->repository->getList()->toArray();
     }
 
     public function delete(int $id)

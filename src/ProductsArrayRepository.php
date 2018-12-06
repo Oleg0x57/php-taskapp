@@ -46,11 +46,11 @@ class ProductsArrayRepository implements ProductsRepositoryInterface
     }
 
     /**
-     * @return Product[]
+     * @return ProductsCollection
      */
     public function getList()
     {
-        $products = [];
+        $products = new ProductsCollection();
         foreach ($this->data as $key => $item) {
             $products[] = new Product($item['id'], $item['title'], $item['package'], $item['bestBefore'], $item['measure'], $item['volume'], $item['cost']);
         }

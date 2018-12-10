@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+{% block content%}
+<div class="mdl-card mdl-shadow--2dp">
+    <div class="mdl-card__title mdl-card--expand">
+        <h2 class="mdl-card__title-text">Available routes</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+        <ul class="mdl-list">
+            <li class="mdl-list__item">
+                <a href="/api/list">
+                    <span class="mdl-list__item-primary-content">/api/list</span></a>
+            </li>
+            <li class="mdl-list__item">
+                <a href="/api/view/2">
+                    <span class="mdl-list__item-primary-content">/api/view/2</span></a>
+            </li>
+        </ul>
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            View Updates
+        </a>
+    </div>
+</div>
+{% endblock %}

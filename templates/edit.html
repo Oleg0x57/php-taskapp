@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block title %}Edit {{ product.title }}{% endblock %}
+{% block content%}
+<form action="">
+    <div class="mdl-textfield mdl-js-textfield">
+        <input class="mdl-textfield__input" name="title" type="text" id="productTitle" value="{{ product.title }}">
+        <label class="mdl-textfield__label" for="productTitle">Title...</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield">
+        <input class="mdl-textfield__input" name="package" type="text" id="productPackage"
+               value="{{ product.package }}">
+        <label class="mdl-textfield__label" for="productPackage">Package...</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield">
+        <input class="mdl-textfield__input" name="bestBefore" type="text" id="productBestBefore"
+               value="{{ product.bestBefore }}">
+        <label class="mdl-textfield__label" for="productBestBefore">Best before...</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield">
+        <input class="mdl-textfield__input" name="measure" type="text" id="productMeasure"
+               value="{{ product.measure }}">
+        <label class="mdl-textfield__label" for="productMeasure">Measure...</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield">
+        <input class="mdl-textfield__input" name="volume" type="text" id="productVolume" value="{{ product.volume }}">
+        <label class="mdl-textfield__label" for="productVolume">Volume...</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield">
+        <input class="mdl-textfield__input" name="cost" type="text" id="productCost" value="{{ product.cost }}">
+        <label class="mdl-textfield__label" for="productCost">Cost...</label>
+    </div>
+</form>
+{% endblock %}

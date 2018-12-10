@@ -30,6 +30,15 @@ return [
     'TaskService' => function () {
         return new \App\TaskService();
     },
+    'ProductService' => function () {
+        return new \App\ProductService(new \App\ProductsArrayRepository());
+    },
+    'ProductController' => function (\Psr\Container\ContainerInterface $c) {
+        return new \App\ProductController($c->get('ProductService'), $c->get('Twig'));
+    },
+    'ApiController' => function (\Psr\Container\ContainerInterface $c) {
+        return new \App\ApiController($c->get('ProductService'));
+    },
     'Uri' => function () {
         return new \Zend\Diactoros\Uri($_SERVER['REQUEST_URI']);
     },

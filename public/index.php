@@ -8,6 +8,11 @@
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    $message = '[' . $errno . '] ' . $errstr;
+    throw new Exception($message);
+});
+
 $containerBuilder = new \DI\ContainerBuilder();
 $containerBuilder->addDefinitions(dirname(__DIR__) . '/config/common.php');
 $container = $containerBuilder->build();
@@ -41,25 +46,30 @@ switch ($routeInfo[0]) {
         // ... 405 Method Not Allowed
         break;
     case FastRoute\Dispatcher::FOUND:
-        if ($routeInfo[1] === 'info') {
-            $response = new \Zend\Diactoros\Response\HtmlResponse($twig->render('info.html'));
-        } else {
-            $handler = $container->get($routeInfo[1]);
-            $vars = $routeInfo[2];
-            extract($vars);
-            if (isset($action) && isset($id)) {
-                $result = $handler->$action($id);
-            } elseif (isset($action)) {
-                $result = $handler->$action();
+        try{
+            if ($routeInfo[1] === 'info') {
+                $response = new \Zend\Diactoros\Response\HtmlResponse($twig->render('info.html'));
             } else {
-                $action = 'index';
-                $result = $handler->$action();
+                $handler = $container->get($routeInfo[1]);
+                $vars = $routeInfo[2];
+                extract($vars);
+                if (isset($action) && isset($id)) {
+                    $result = $handler->$action($id);
+                } elseif (isset($action)) {
+                    $result = $handler->$action();
+                } else {
+                    $action = 'index';
+                    $result = $handler->$action();
+                }
+                if ($handler instanceof \App\ApiController) {
+                    $response = new \Zend\Diactoros\Response\JsonResponse($result, 200);
+                } elseif ($handler instanceof \App\ProductController) {
+                    $response = new \Zend\Diactoros\Response\HtmlResponse($result, 200);
+                }
             }
-            if ($handler instanceof \App\ApiController) {
-                $response = new \Zend\Diactoros\Response\JsonResponse($result, 200);
-            } elseif ($handler instanceof \App\ProductController) {
-                $response = new \Zend\Diactoros\Response\HtmlResponse($result, 200);
-            }
+        } catch (Throwable $exception){
+            $result = $twig->render('error.html', ['error' => $exception->getMessage()]);
+            $response = new \Zend\Diactoros\Response\HtmlResponse($result, 500);
         }
         break;
 }

@@ -1,0 +1,357 @@
+#%RAML 1.0
+---
+title: example of e-shop API
+baseUri: http://api.shop-example.test/{version}
+version: v1
+/products:
+    get:
+        description: Retrieve a list of products
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "items": [
+                                    {
+                                        "id": 1,
+                                        "title": "Молоко",
+                                        "package": "Пэт бут.",
+                                        "bestBefore": 3,
+                                        "measure": "л",
+                                        "volume": 1,
+                                        "cost": 58
+                                    },
+                                    {
+                                      "id": 2,
+                                      "title": "Сливки",
+                                      "package": "Пэт бут.",
+                                      "bestBefore": 5,
+                                      "measure": "г",
+                                      "volume": 250,
+                                      "cost": 60
+                                    }
+                                ]
+                            }
+    post:
+        description: Add a new product
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "success"
+                            }
+        body:
+            application/json:
+                type: |
+                    {
+                        "type": "object",
+                        "required": true,
+                        "properties": {
+                            "title": {
+                                "type": string,
+                                "required": true
+                            },
+                            "package": {
+                                "type": integer,
+                                "required": true
+                            },
+                            "bestBefore": {
+                                "type": integer,
+                                "required": true
+                            },
+                            "measure": {
+                               "type": integer,
+                               "required": true
+                            },
+                            "volume": {
+                                "type": float,
+                                "required": true
+                            },
+                            "cost": {
+                                "type": integer,
+                                "required": true
+                            }
+                        }
+                    }
+                example: |
+                    {
+                        "title": "Кефир",
+                        "package": 2,
+                        "bestBefore": 3,
+                        "measure": 1,
+                        "volume": 1,
+                        "cost": 55
+                    }
+    /{productId}:
+        get:
+            description: Retrieve a concrete product by ID
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "id": 1,
+                                    "title": "Молоко",
+                                    "package": "Пэт бут.",
+                                    "bestBefore": 3,
+                                    "measure": "л",
+                                    "volume": 1,
+                                    "cost": 58
+                                }
+        put:
+            description: Update a concrete product by ID
+            body:
+                application/json:
+                    type: |
+                        {
+                            "type": "object",
+                            "required": true,
+                            "properties": {
+                                "title": {
+                                    "type": string,
+                                    "required": false
+                                },
+                                "package": {
+                                    "type": integer,
+                                    "required": false
+                                },
+                                "bestBefore": {
+                                    "type": integer,
+                                    "required": false
+                                },
+                                "measure": {
+                                   "type": integer,
+                                   "required": false
+                                },
+                                "volume": {
+                                    "type": float,
+                                    "required": false
+                                },
+                                "cost": {
+                                    "type": integer,
+                                    "required": false
+                                }
+                            }
+                        }
+                    example: |
+                        {
+                            "title": "Кефир",
+                            "package": 3,
+                            "bestBefore": 4,
+                            "measure": 2,
+                            "volume": 3,
+                            "cost": 175
+                        }
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "success"
+                                }
+        delete:
+            description: Update a concrete product by ID
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "success"
+                                }
+/basket:
+    get:
+        description: Retrieve a contents of the basket
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "items": [
+                                    {
+                                        "item": {
+                                            "id": 1,
+                                            "title": "Молоко",
+                                            "package": "Пэт бут.",
+                                            "bestBefore": 3,
+                                            "measure": "л",
+                                            "volume": 1,
+                                            "cost": 58
+                                        },
+                                        "quantity": 3
+                                    }
+                                ],
+                                "totalSum": 174
+                            }
+    post:
+        description: Add product to the basket
+        body:
+            application/json:
+                type: |
+                    {
+                        "type": object,
+                        "required": true,
+                        "properties": {
+                            "item": {
+                                "type": object,
+                                "required": true
+                            },
+                            "quantity": {
+                                "type": integer,
+                                "required": true
+                            }
+                        }
+                    }
+                example: |
+                    {
+                        "item": {
+                            "id": 1,
+                            "title": "Молоко",
+                            "package": "Пэт бут.",
+                            "bestBefore": 3,
+                            "measure": "л",
+                            "volume": 1,
+                            "cost": 58
+                        },
+                        "quantity": 3
+                    }
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "success"
+                            }
+    /{itemId}:
+        put:
+            description: Change quantity of the item in the basket
+            body:
+                application/json:
+                    type: |
+                        {
+                            "type": object,
+                            "required": true,
+                            "properties": {
+                                "quantity": {
+                                    "type": integer,
+                                    "required": true
+                                }
+                            }
+                        }
+                    example: |
+                        {
+                            "quantity": 3
+                        }
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "success"
+                                }
+        delete:
+            description: Delete item from basket
+            responses:
+                200:
+                    body:
+                        application/json:
+                            example: |
+                                {
+                                    "message": "success"
+                                }
+/orders:
+    get:
+        description: Retrieve a list of orders
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "items": [
+                                    {
+                                        "items": [
+                                            {
+                                                "item": {
+                                                    "id": 1,
+                                                    "title": "Молоко",
+                                                    "package": "Пэт бут.",
+                                                    "bestBefore": 3,
+                                                    "measure": "л",
+                                                    "volume": 1,
+                                                    "cost": 58
+                                                },
+                                                "quantity": 3
+                                            }
+                                        ],
+                                        "date": "12-01-2018",
+                                        "totalSum": 174
+                                    },
+                                    {
+                                        "items": [
+                                            {
+                                                "item": {
+                                                    "id": 1,
+                                                    "title": "Сыр",
+                                                    "package": "Пищевая пленка",
+                                                    "bestBefore": 3,
+                                                    "measure": "л",
+                                                    "volume": 1,
+                                                    "cost": 1000
+                                                },
+                                                "quantity": 1
+                                            }
+                                        ],
+                                        "date": "13-01-2018",
+                                        "totalSum": 1000
+                                    }
+                                ]
+                            }
+    post:
+        description: Add a new order
+        body:
+            application/json:
+                type: |
+                    {
+                        "type": object,
+                        "required": true,
+                        "properties": {
+                            "items": {
+                                "type": "array",
+                                "required": true
+                            }
+                        }
+                    }
+                example: |
+                    {
+                        "items": [
+                            {
+                                "item": {
+                                    "id": 1,
+                                    "title": "Молоко",
+                                    "package": "Пэт бут.",
+                                    "bestBefore": 3,
+                                    "measure": "л",
+                                    "volume": 1,
+                                    "cost": 58
+                                },
+                                "quantity": 3
+                            }
+                        ]
+                    }
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "message": "success"
+                            }

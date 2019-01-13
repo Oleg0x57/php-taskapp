@@ -39,6 +39,9 @@ return [
     'ApiController' => function (\Psr\Container\ContainerInterface $c) {
         return new \App\ApiController($c->get('ProductService'));
     },
+    'ProductApiController' => function (\Psr\Container\ContainerInterface $c) {
+        return new \App\ProductApiController($c->get('ProductService'));
+    },
     'Uri' => function () {
         return new \Zend\Diactoros\Uri($_SERVER['REQUEST_URI']);
     },

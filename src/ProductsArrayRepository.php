@@ -33,6 +33,7 @@ class ProductsArrayRepository implements ProductsRepositoryInterface
      */
     public function create(Product $product)
     {
+        $product->setId(count($this->data));
         $this->data[] = [
             'id' => $product->getId(),
             'title' => $product->getTitle(),

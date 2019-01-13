@@ -24,7 +24,7 @@ class ProductService
     {
         $product = new Product(null, $data['title'], $data['package'], $data['bestBefore'], $data['measure'], $data['volume'], $data['cost']);
         if ($this->repository->create($product)) {
-            $result = $this->repository->getList()->toArray();
+            $result = ['message' => 'success'];
         } else {
             $result = ['error' => true];
         }
@@ -35,7 +35,7 @@ class ProductService
     {
         $product = new Product($data['id'], $data['title'], $data['package'], $data['bestBefore'], $data['measure'], $data['volume'], $data['cost']);
         if ($this->repository->update($product)) {
-            $result = $this->repository->getList()->toArray();
+            $result = ['message' => 'success'];
         } else {
             $result = ['error' => true];
         }
@@ -54,6 +54,6 @@ class ProductService
 
     public function delete(int $id)
     {
-
+        return ['message' => 'success'];
     }
 }

@@ -19,7 +19,7 @@ class ProductsApiTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->client = new \GuzzleHttp\Client(['base_uri' => 'http://localhost:8080/api/v1/products']);
+        $this->client = new \GuzzleHttp\Client(['base_uri' => 'http://localhost:8080']);
         $this->products = require dirname(__DIR__) . '/src/data.php';
     }
 

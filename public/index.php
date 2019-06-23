@@ -23,6 +23,8 @@ $request = $container->get('ServerRequest');
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/task/{action:\w+}/{id:\d+}', 'TaskService');
     $r->addRoute(['GET', 'POST', 'PUT', 'DELETE'], '/api/v1/products[/{id:\d+}]', 'products_api');
+    $r->addRoute(['GET', 'POST', 'PUT', 'DELETE'], '/api/v1/basket[/{id:\d+}]', 'basket_api');
+    $r->addRoute(['GET', 'POST'], '/api/v1/orders[/{id:\d+}]', 'orders_api');
     $r->addRoute('GET', '/api[/{action:\w+}[/{id:\d+}]]', 'ApiController');
     $r->addRoute('GET', '/product[/{action:\w+}[/{id:\d+}]]', 'ProductController');
     $r->addRoute('GET', '/info', 'info');
@@ -50,6 +52,8 @@ switch ($routeInfo[0]) {
         try {
             if ($routeInfo[1] === 'info') {
                 $response = new \Zend\Diactoros\Response\HtmlResponse($twig->render('info.html'));
+            } else if ($routeInfo[1] === 'orders_api') {
+            } else if ($routeInfo[1] === 'basket_api') {
             } else if ($routeInfo[1] === 'products_api') {
                 $controller = $container->get('ProductApiController');
                 $id = null;

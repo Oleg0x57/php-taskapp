@@ -40,7 +40,7 @@ class ProductController
 
     public function edit($id)
     {
-        $product = $this->service->view($id);
+        $product = $this->service->one($id);
         return $this->twig->render('edit.html', ['product' => $product]);
     }
 }
